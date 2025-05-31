@@ -2,6 +2,7 @@ package com.example.userLogin.service;
 
 import com.example.userLogin.dto.UserLoginRequest;
 import com.example.userLogin.dto.UserRegisterRequest;
+import com.example.userLogin.model.Role;
 import com.example.userLogin.model.User;
 import com.example.userLogin.repository.UserRepository;
 import com.example.userLogin.security.JwtService;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -28,9 +30,9 @@ public class UserService {
         if (userRepository.existsByEmail(request.getEmail())) {
             return "User with this email already exists.";
         }
-
         String hashedPassword = passwordEncoder.encode(request.getPassword());
         User user = new User(request.getEmail(), hashedPassword);
+        user.setRoles(Set.of(Role.ROLE_USER));
         userRepository.save(user);
         return "User registered successfully.";
     }
@@ -41,7 +43,7 @@ public class UserService {
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-                return jwtService.generateToken(user.getEmail());
+                return jwtService.generateToken(user.getEmail(),user.getRoles());
             }
         }
 

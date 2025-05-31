@@ -4,7 +4,9 @@ public class UserRegisterRequest {
     private String email;
     private String password;
 
-    // Getters & Setters
+    public UserRegisterRequest() {
+    }
+
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
     public String getPassword() { return password; }

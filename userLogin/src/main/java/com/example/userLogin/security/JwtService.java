@@ -1,17 +1,21 @@
 package com.example.userLogin.security;
 
+import com.example.userLogin.model.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
 
     private final String SECRET_KEY = "mysupersecretkeyformyjwtthatis32bytes!";
+    private final long EXPIRATION_TIME = 36000000;
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
@@ -30,11 +34,12 @@ public class JwtService {
         return resolver.apply(claims);
     }
 
-    public String generateToken(String username) {
+    public String generateToken(String username, Set<Role> roles) {
         return Jwts.builder()
                 .setSubject(username)
+                .claim("roles", roles.stream().map(Enum::name).collect(Collectors.toList()))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

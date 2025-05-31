@@ -34,10 +34,9 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Product> save(@RequestBody Product product) {
-        Product savedProduct = productService.save(product);
-        // Return 201 Created with Location header
-        return ResponseEntity.created(URI.create("/api/products/" + savedProduct.getId()))
-                .body(savedProduct);
+        Product saved = productService.save(product);
+        System.out.println("Saved product: " + saved);
+        return ResponseEntity.ok(saved);
     }
 
     @DeleteMapping("/{id}")
