@@ -2,6 +2,7 @@ package com.example.product_service.service;
 
 import com.example.product_service.model.Product;
 import com.example.product_service.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,4 +31,18 @@ public class ProductService {
     public void delete(Long id) {
         productRepository.deleteById(id);
     }
+
+    @Transactional
+    public void reduceProductQuantity(Long productId, int quantityToReduce) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        if (product.getQuantity() < quantityToReduce) {
+            throw new RuntimeException("Not enough stock for product ID " + productId);
+        }
+
+        product.setQuantity(product.getQuantity() - quantityToReduce);
+        productRepository.save(product);
+    }
+
 }

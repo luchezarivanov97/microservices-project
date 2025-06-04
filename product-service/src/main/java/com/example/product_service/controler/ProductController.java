@@ -78,4 +78,11 @@ public class ProductController {
         productService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/reduceQuantity/{id}")
+    public ResponseEntity<Void> reduceQuantity(@PathVariable Long id, @RequestParam int quantity) {
+        productService.reduceProductQuantity(id, quantity);
+        return ResponseEntity.ok().build();
+    }
+
 }

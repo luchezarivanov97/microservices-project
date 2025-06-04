@@ -19,4 +19,6 @@ public class Product {
     private String description;
     @Min(0)
     private Double price;
+    @Column(nullable = false)
+    private Integer quantity;
 }

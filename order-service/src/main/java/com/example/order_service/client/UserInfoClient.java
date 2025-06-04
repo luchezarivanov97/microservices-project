@@ -1,7 +1,7 @@
-package com.example.product_service.client;
+package com.example.order_service.client;
 
-import com.example.product_service.model.UserInfoResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.order_service.model.UserInfoResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
@@ -9,14 +9,10 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.http.*;
 
 @Component
+@RequiredArgsConstructor
 public class UserInfoClient {
 
     private final RestTemplate restTemplate;
-
-    @Autowired
-    public UserInfoClient(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
 
     public UserInfoResponse getUserInfo(String token) {
         try {
@@ -37,3 +33,4 @@ public class UserInfoClient {
         }
     }
 }
+
