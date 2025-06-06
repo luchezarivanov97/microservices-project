@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -41,11 +42,19 @@ public class OrderService {
         for (Long productId : productIds) {
             try {
                 ProductInfoResponse product = productInfoClient.getProductById(productId, token);
+
                 if (product == null || product.getQuantity() <= 0) {
                     throw new RuntimeException("Product with ID " + productId + " is out of stock.");
                 }
+
+                Map<String, Double> priceMap = product.getPrice();
+                if (priceMap == null || !priceMap.containsKey("BGN")) {
+                    throw new RuntimeException("Price in BGN is missing for product ID " + productId);
+                }
+                double priceInBGN = priceMap.get("BGN");
+
                 productInfoClient.reduceProductQuantity(productId, 1, token); // update order to be able to order more than 1 item
-                total += product.getPrice();
+                total += priceInBGN;
                 validProductIds.add(productId);
             } catch (Exception ex) {
                 throw new RuntimeException("Failed to fetch product with ID " + productId + ": " + ex.getMessage());

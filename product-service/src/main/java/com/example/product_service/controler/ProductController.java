@@ -45,7 +45,7 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<Product>> getAll(@RequestHeader("Authorization") String authHeader) {
-        getUserInfoFromToken(authHeader); // just to ensure token is valid
+        getUserInfoFromToken(authHeader);
         return ResponseEntity.ok(productService.getAll());
     }
 
@@ -83,6 +83,19 @@ public class ProductController {
     public ResponseEntity<Void> reduceQuantity(@PathVariable Long id, @RequestParam int quantity) {
         productService.reduceProductQuantity(id, quantity);
         return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<List<Product>> getProductsByIds(@RequestBody List<Long> ids, @RequestHeader("Authorization") String authHeader) {
+        getUserInfoFromToken(authHeader);
+        List<Product> products = productService.getByIds(ids);
+        return ResponseEntity.ok(products);
+    }
+
+    @PostMapping("/total-price")
+    public ResponseEntity<Double> getTotalPriceInBGN(@RequestBody List<Long> ids, @RequestHeader("Authorization") String authHeader) {
+        getUserInfoFromToken(authHeader);
+        Double total = productService.getTotalPriceInBGN(ids);
+        return ResponseEntity.ok(total);
     }
 
 }

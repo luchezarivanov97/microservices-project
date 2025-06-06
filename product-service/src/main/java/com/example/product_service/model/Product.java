@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.util.Map;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -17,8 +19,8 @@ public class Product {
     @NotBlank
     private String name;
     private String description;
-    @Min(0)
-    private Double price;
+    @ElementCollection
+    private Map<String, Double> price;
     @Column(nullable = false)
     private Integer quantity;
 }
