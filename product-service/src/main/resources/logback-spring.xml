@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Logstash TCP Appender -->
+    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <!-- Send logs to the Logstash container -->
+        <destination>logstash:5000</destination>
+
+        <!-- Encode logs as structured JSON -->
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <!-- Timestamp field -->
+                <timestamp>
+                    <fieldName>timestamp</fieldName>
+                </timestamp>
+
+                <!-- Logger name -->
+                <loggerName/>
+
+                <!-- Thread name, log level, message, MDC -->
+                <pattern>
+                    <pattern>
+                        {
+                        "level": "%level",
+                        "thread": "%thread",
+                        "message": "%message",
+                        "context": "%mdc"
+                        }
+                    </pattern>
+                </pattern>
+
+                <!-- Method arguments -->
+                <arguments/>
+
+                <!-- Include stack traces -->
+                <stackTrace/>
+            </providers>
+        </encoder>
+    </appender>
+
+    <!-- Root logger sends everything to logstash -->
+    <root level="INFO">
+        <appender-ref ref="LOGSTASH"/>
+    </root>
+
+</configuration>

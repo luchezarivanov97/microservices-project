@@ -25,11 +25,10 @@ public class CurrencyService {
     }
 
     public Double convertToBGN(String fromCurrency, Double amount) {
-        String url = "https://api.apilayer.com/exchangerates_data/convert?to=BGN&from="
-                + fromCurrency + "&amount=" + amount;
+        String url = "https://api.currencybeacon.com/v1/convert?from=" + fromCurrency +"&to=BGN&amount="
+                + amount +"&api_key=" + apiKey;
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("apikey", apiKey);
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
         ResponseEntity<Map> response = restTemplate.exchange(
